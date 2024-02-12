@@ -1,0 +1,35 @@
+name: DEVELOPMENT (🚀)
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (🛎️)
+        uses: actions/checkout@v3
+
+      - name: Setup Bun (🌀)
+        uses: oven-sh/setup-bun@v1
+
+      - name: Installing (📦)
+        run: bun install
+
+      - name: Building (🛠️)
+        run: bun run build
+
+      - name: Production deploy to https://empty-joy-top.netlify.app (🚀)
+        uses: nwtgck/actions-netlify@v1.2
+        with:
+          production-branch: 'main'
+          publish-dir: './build'
+          deploy-message: ${{ github.event.head_commit.message }}
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.SITE_ID }}
+        timeout-minutes: 1
